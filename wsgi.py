@@ -2,6 +2,7 @@
 from flask import Flask
 from flask import jsonify
 from flask import abort
+from flask import request
 app = Flask(__name__)
 
 PRODUCTS = [
@@ -20,12 +21,17 @@ def get_products():
     return jsonify(PRODUCTS)
 
 
-@app.route('/api/v1/products/<int:id>')
+@app.route('/api/v1/products/<int:id>', methods=['GET', 'DELETE'])
 def get_product(id):
-    for product in PRODUCTS:
-        if product['id'] == id:
-            return jsonify(product)
-
+    if request.method == 'GET':
+        for product in PRODUCTS:
+            if product['id'] == id:
+                return jsonify(product)
+    else:
+        for product in PRODUCTS:
+            if product['id'] == id:
+                PRODUCTS.remove(product)
+                return jsonify(204)
     return abort(404)
 
 

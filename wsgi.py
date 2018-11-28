@@ -3,6 +3,8 @@ from flask import Flask
 from flask import jsonify
 from flask import abort
 from flask import request
+from counter import Counter
+
 app = Flask(__name__)
 
 PRODUCTS = [
@@ -16,9 +18,16 @@ def hello():
     return "Hello World!"
 
 
-@app.route('/api/v1/products')
+@app.route('/api/v1/products', methods=['GET', 'POST'])
 def get_products():
-    return jsonify(PRODUCTS)
+    if request.method == 'GET':
+        return jsonify(PRODUCTS)
+    else:
+        new_product = request.get_json()
+        ID = Counter()
+        new_id = ID.next()
+        PRODUCTS.append({'id': new_id, 'name': new_product['name']})
+        return jsonify(201)
 
 
 @app.route('/api/v1/products/<int:id>', methods=['GET', 'DELETE'])

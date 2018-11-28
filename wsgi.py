@@ -30,12 +30,19 @@ def get_products():
         return jsonify(201)
 
 
-@app.route('/api/v1/products/<int:id>', methods=['GET', 'DELETE'])
+@app.route('/api/v1/products/<int:id>', methods=['GET', 'DELETE', 'PATCH'])
 def get_product(id):
     if request.method == 'GET':
         for product in PRODUCTS:
             if product['id'] == id:
                 return jsonify(product)
+    elif request.method == 'PATCH':
+        upd_product = request.get_json()
+        for product in PRODUCTS:
+            if product['id'] == id:
+                product['name'] = upd_product['name']
+                return jsonify(204)
+        return jsonify(422)
     else:
         for product in PRODUCTS:
             if product['id'] == id:

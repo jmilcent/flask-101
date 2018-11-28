@@ -38,4 +38,16 @@ class TestViews(TestCase):
         product = response.json
         self.assertEqual(product, 201)
 
+    def test_upd_product(self):
+        response = self.client.patch("/api/v1/products/4",
+                                     data=json.dumps(dict(name='tonton')),
+                                     content_type='application/json')
+        product = response.json
+        self.assertEqual(product, 204)
 
+    def test_not_upd_product(self):
+        response = self.client.patch("/api/v1/products/3",
+                                     data=json.dumps(dict(name='tonton')),
+                                     content_type='application/json')
+        product = response.json
+        self.assertEqual(product, 422)

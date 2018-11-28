@@ -1,5 +1,6 @@
 # tests/test_views.py
 from flask_testing import TestCase
+from flask import json
 from wsgi import app
 
 
@@ -29,5 +30,12 @@ class TestViews(TestCase):
         response = self.client.delete("/api/v1/products/3")
         product = response.json
         self.assertEqual(product, 204)
+
+    def test_add_product(self):
+        response = self.client.post("/api/v1/products",
+                                    data=json.dumps(dict(name='tata')),
+                                    content_type='application/json')
+        product = response.json
+        self.assertEqual(product, 201)
 
 
